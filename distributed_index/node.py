@@ -1,4 +1,8 @@
+import argparse
+import asyncio
 import json
+import random
+
 import spacy
 from aiohttp import web
 from inverted_index import InvertedIndex
@@ -75,8 +79,25 @@ async def index(request):
     return response
 
 
+@routes.get('/health')
+async def words(_):
+    """
+    GET /health
+
+    Provides application/json
+    Model:
+    [
+        "health": "green"
+    ]
+
+    Description:
+    Returns if the node is still running.
+    """
+    return web.json_response({"health": "green"}, status=200)
+
+
 @routes.get('/words')
-async def words(request):
+async def words(_):
     """
     GET /words
 
@@ -145,6 +166,16 @@ async def entries(request):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("--port", help="Port to listen for requests.",
+                        type=int, required=False,
+                        default=8001)
+    parser.add_argument("--host", help="Host to run on.",
+                        type=str, required=False,
+                        default="127.0.0.1")
+
+    args = parser.parse_args()
     app = web.Application()
     app.add_routes(routes)
-    web.run_app(app, host="127.0.0.1", port="8000")
+    web.run_app(app, host=args.host, port=args.port)
