@@ -88,6 +88,36 @@ class InvertedIndex:
     def save_to_file(self, path):
         json.dump(self.inverted_index, open(path, 'w'))
 
+    def create_partial_index(self, words):
+        """
+        Create a spartial index that only contains the given words.
+        """
+        partial_index = {}
+        words = set(words)
+
+        for field in self.fields:
+            partial_index[field] = {}
+            for analyzer in self.analyzers:
+                partial_index[field][analyzer] = {
+                    word: postings for word, postings
+                    in self.inverted_index[field][analyzer].items()
+                    if word in words
+                }
+
+        return partial_index
+
+    def words(self):
+        """
+        Return a list of all the words used in this index.
+        """
+        return list(set(chain(
+            *[
+                self.inverted_index[field][analyzer].keys()
+                for field in self.fields
+                for analyzer in self.analyzers
+            ]
+        )))
+
     @classmethod
     def from_file(cls, nlp, path):
         data = json.load(open(path))
