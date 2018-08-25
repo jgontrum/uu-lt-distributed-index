@@ -90,7 +90,7 @@ class InvertedIndex:
 
     def create_partial_index(self, words):
         """
-        Create a spartial index that only contains the given words.
+        Create a partial index that only contains the given words.
         """
         partial_index = {}
         words = set(words)

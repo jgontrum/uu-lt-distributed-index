@@ -1,3 +1,0 @@
-port: 8000
-number_of_nodes: 3
-node_cmd: env/bin/python distributed_index/node.py

@@ -1,0 +1,11 @@
+master:
+  name: master_node
+  host: 127.0.0.1
+  port: 8080
+slave:
+  name: slave_node_{number}
+  host: 127.0.0.1
+  port: 8090
+  number_of_slaves: 5
+  run_command: env/bin/start_slave
+  logfile: logs/slave_node_{number}.log

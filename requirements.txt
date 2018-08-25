@@ -1,15 +1,9 @@
-# Packages for jupyter
-jupyter==1.0.0
-jupyter_contrib_nbextensions
-ipyparallel==6.1.1
-ipykernel==4.8.2
-autopep8
-
 # Package use to serve an API
-falcon==1.4.1
+schematics==1.1.1
+supercell
 
 # Package use for NLP
-spacy==2.0.11
+spacy
 
 # Other useful stuff
-ujson
+PyYAML
