@@ -42,7 +42,8 @@ class MergeHandler(RequestHandler):
                 f"/api/partial_index",
                 method="POST",
                 body=json.dumps({"words": words}),
-                headers={'content-type': 'application/json'}
+                headers={'content-type': 'application/json'},
+                request_timeout=1200
             ) for node in nodes
         ]
 

@@ -66,7 +66,8 @@ class IndexHandler(RequestHandler):
                 url,
                 method="POST",
                 body=json.dumps(payload),
-                headers={'content-type': 'application/json'}
+                headers={'content-type': 'application/json'},
+                request_timeout=1200
             )
             requests.append(request)
 
@@ -112,7 +113,8 @@ class IndexHandler(RequestHandler):
                 url,
                 method="POST",
                 body=json.dumps(payload),
-                headers={'content-type': 'application/json'}
+                headers={'content-type': 'application/json'},
+                request_timeout=1200
             )
             requests.append(request)
 
