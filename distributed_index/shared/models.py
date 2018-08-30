@@ -27,12 +27,5 @@ class HealthResponse(NodeHealth):
     )
 
 
-class AnalyzedFields(Model):
-    token = DictType(ListType(IntType))
-    lemma = DictType(ListType(IntType))
-    lemma_lowercase = DictType(ListType(IntType))
-    token_lowercase = DictType(ListType(IntType))
-
-
 class InvertedIndexModel(Model):
-    text = ModelType(AnalyzedFields, required=True)
+    text = DictType(DictType(ListType(IntType)), required=True)

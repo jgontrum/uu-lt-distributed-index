@@ -35,6 +35,11 @@ class IndexHandler(RequestHandler):
         #
         t0 = time.time()
 
+        # In case we have more nodes than documents, scale down the number
+        # of nodes to have one for each document
+        if len(documents) < len(nodes):
+            nodes = nodes[:len(documents)]
+
         batch_size = int(ceil(len(documents) / len(nodes)))
         batches = [
             [doc for doc in documents[i * batch_size: (i + 1) * batch_size]]
@@ -130,7 +135,13 @@ class IndexHandler(RequestHandler):
         #
 
         t2 = time.time()
-        merged_index = InvertedIndex.merge(None, *responses)
+
+        # Support the case of an empty response. This can happen with small
+        # corpora that only contain stop words.
+        if responses:
+            merged_index = InvertedIndex.merge(None, *responses)
+        else:
+            merged_index = InvertedIndex(None)
 
         t3 = time.time()
         response = IndexResponse({
