@@ -119,11 +119,18 @@ experiments = [
     {
         "documents": 5000,
         "nodes": 20
-    },
+    }
 ]
 
 
 def startup(number_of_nodes):
+    command = f"env/bin/start_master " \
+              f"--max_grace_seconds=0 " \
+              f"--logfile=/dev/null " \
+              f"--slave_nodes_num={number_of_nodes}".split()
+
+    process = subprocess.Popen(command, preexec_fn=os.setsid)
+
     # Wait for server to start
     started = False
     while not started:
@@ -139,12 +146,13 @@ def startup(number_of_nodes):
         except requests.exceptions.ConnectionError:
             pass
 
-        wait = 1
-        print(f"Wait for server to start... ({wait}s)")
-        sleep(wait)
+        print(f"Wait for server to start...")
+        sleep(1)
+
+    return process
 
 
-def cleanup():
+def cleanup(process):
     print("Kill server...")
     os.killpg(os.getpgid(process.pid), signal.SIGTERM)
 
@@ -157,14 +165,7 @@ with open("results.csv", "w") as f:
         print(f"Run experiment {i+1}: {experiment['documents']} docs "
               f"on {experiment['nodes']} nodes.")
 
-        command = f"env/bin/start_master " \
-                  f"--max_grace_seconds=0 " \
-                  f"--logfile=/dev/null " \
-                  f"--slave_nodes_num={experiment['nodes']}".split()
-
-        process = subprocess.Popen(command, preexec_fn=os.setsid)
-
-        startup(experiment['nodes'])
+        process = startup(experiment['nodes'])
 
         # Run experiment!
         print("Start experiment...")
@@ -197,4 +198,4 @@ with open("results.csv", "w") as f:
         f.flush()
 
         print(f"Done with experiment ({int(metrics['all'])}s).")
-        cleanup()
+        cleanup(process)

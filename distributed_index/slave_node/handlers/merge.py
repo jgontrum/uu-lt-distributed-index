@@ -43,7 +43,7 @@ class MergeHandler(RequestHandler):
                 method="POST",
                 body=json.dumps({"words": words}),
                 headers={'content-type': 'application/json'},
-                request_timeout=1200
+                request_timeout=3600
             ) for node in nodes
         ]
 
